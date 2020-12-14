@@ -5,6 +5,8 @@ info:
 ## Spring应用程序的名称
 server:
   port: 9091
+  # 这个有个问题，如果是要部署多台机器，就需要每个配置文件都修改一次，除非在start.sh里面进行替换(address: 127.0.0.1->address: `hostname -i`),
+  # hostname -i可以查看hostname对应的ip
   address: ${filter.big-data-kafka.ip}
 spring:
   application:

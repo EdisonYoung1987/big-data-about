@@ -132,7 +132,8 @@
         <!-- consul 服务器IP -->
         <filter.consul.ip>127.0.0.1</filter.consul.ip>
 
-        <!-- 定义各个服务所在服务器ip -->
+        <!-- 定义各个服务所在服务器ip，如果是分布式多节点部署，则保留为127.0.0.1，后面启动脚本会进行替换
+             每个机器需要hostnamectl set-hostname 指定hostname并在/etc/hosts中配置ip-->
         <filter.big-data-kafka.ip>127.0.0.1</filter.big-data-kafka.ip>
 
         <!-- kafka 集群地址 -->

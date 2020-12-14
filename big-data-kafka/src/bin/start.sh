@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 base_dir=$(dirname $0)/..
 
+#替换bootstrap.yml中的server.address
+ip=`hostname -i`
+sed -i "s/address: 127.0.0.1/address: ${ip}/" $base_dir/config/bootstrap.yml
+echo "完成server.address替换"
+
 echo base_dir;
 # loading dependency jar in lib directory
 for file in $base_dir/lib/*.jar;

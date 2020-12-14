@@ -1,4 +1,4 @@
-package com.edison.bigdatakafka.config;
+package com.edison.bigdatakafka.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
