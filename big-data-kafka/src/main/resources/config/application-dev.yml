@@ -1,0 +1,26 @@
+spring:
+  kafka:
+    bootstrap-servers: ${filter.kafka.bootstrap-servers}
+    producer:
+      # 重试次数
+      retries: 3
+      # 批量发送的消息数量
+      batch-size: 16384
+      # 32MB的批处理缓冲区
+      buffer-memory: 33554432
+    consumer:
+      # 默认消费者组
+      group-id: ehl-dap-alarm-test
+      # 最早未被消费的offset
+      auto-offset-reset: earliest
+      # 批量一次最大拉取数据量
+      max-poll-records: 10
+      # 自动提交
+      auto-commit-interval: 1000
+      enable-auto-commit: true
+    listener:
+      #并发消费
+      concurrency: 1
+app:
+  topicName:
+    passCarTopic: tfc_pass_ka_yw_0825 #passCar #tr_pass

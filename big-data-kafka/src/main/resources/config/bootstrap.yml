@@ -1,0 +1,46 @@
+info:
+  name: 大数据相关应用
+  contact: yangchuan@123432@126.com
+  website: http://www.test.com
+## Spring应用程序的名称
+server:
+  port: 9091
+  address: ${filter.big-data-kafka.ip}
+spring:
+  application:
+    name: big-data-kafka
+  # 多环境切换
+  profiles:
+    # 激活哪个环境的配置（如 active = dev 表示启用application-dev.yml）
+    active: ${filter.active-profile}
+#  http:
+#    encoding:
+#      charset: utf-8
+#      force: true
+#      enabled: true
+  # 注册中心consul的配置信息
+  cloud:
+    consul:
+      host: ${filter.consul.ip}
+      port: 8500
+      discovery:
+        register: true
+        # 当单服务器有多个ip时，涉及到${spring.cloud.client.ip-address}的值都配置为具体ip,防止状态检查不通过及ip标识错误
+        # 如果服务器是单ip,可以用${spring.cloud.client.ip-address}代替各处的具体ip
+        prefer-ip-address: true # 这个必须配,
+        instance-id: ${spring.application.name}:${server.address}
+        serviceName: ${spring.application.name} # 微服务实例名称,客户端进行服务调用用此名称
+        tags: version=1.0
+        health-check-interval: 15s   # 每隔10s检查
+        health-check-url: http://${server.address}:${server.port}/actuator/health # 配置实例地址 ,当服务器有多个ip的时候，建议修改为注册ip
+        # hostname: utb.dap.ehl.com
+        ip-address: ${server.address}
+        heartbeat:
+          # spring cloud 向consul注册服务时，显示Unhealthy Nodes（不健康的节点）解决方法之一
+          enabled: true
+      config:
+        # 表示consul上面文件的格式 有四种 YAML PROPERTIES KEY-VALUE FILES
+        format: YAML
+        #表示consul上面的KEY值(或者说文件的名字) 默认是data
+        data-key: data
+

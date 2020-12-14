@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.2.12.RELEASE</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.edison</groupId>
+  <artifactId>big-data-about</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>big-data-common</module>
+    <module>big-data-web</module>
+    <module>big-data-kafka</module>
+  </modules>
+
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+
+    <spring-boot.version>2.2.12.RELEASE</spring-boot.version>
+    <maven.test.skip>true</maven.test.skip>
+    <spring-kafka.version>2.3.13.RELEASE</spring-kafka.version>
+    <kafka-clients.version>2.3.1</kafka-clients.version>
+    <!--springboot和cloud对应关系参考：https://spring.io/projects/spring-cloud-->
+    <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+    <resource.delimiter>${}</resource.delimiter>
+  </properties>
+
+  <dependencyManagement> <!--这里面的依赖包，如果子项目会用到，需要在自己的pom.xml中引入，此处只做版本号管理，不实际引入-->
+      <dependencies>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter</artifactId>
+          <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+          <version>${spring-boot.version}</version>
+        </dependency>
+
+        <!-- 消息队列 -->
+        <dependency>
+          <groupId>org.springframework.kafka</groupId>
+          <artifactId>spring-kafka</artifactId>
+          <version>${spring-kafka.version}</version>
+          <!--<exclusions> <exclusion> <groupId>org.apache.kafka</groupId> <artifactId>kafka-clients</artifactId> </exclusion> </exclusions> -->
+        </dependency>
+        <dependency>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>kafka-clients</artifactId>
+          <version>${kafka-clients.version}</version>
+        </dependency>
+          <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+      </dependencies>
+  </dependencyManagement>
+
+  <!-- 全局依赖 -->
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+      <!-- scope 定为 provided，则不会打包到部署包 -->
+      <scope>provided</scope>
+    </dependency>
+    <!--使bootstrap配置生效-->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-context</artifactId>
+    </dependency>
+  </dependencies>
+
+
+  <profiles>
+  <!-- 属性名称统一以 “filter.” 开头以便跟各个服务内部的配置文件中的属性名区分开来 -->
+  <!-- 这里只列举一些经常需要改动各个服务共享的一些配置；其他环境特有的或者不怎么变动的配置，在各个环境的 application-xxx.yml 中配置好 -->
+    <profile>
+      <!-- 开发环境 -->
+      <id>dev-profile</id>
+      <activation>
+        <!-- 默认激活 -->
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <!-- 激活哪个环境的配置（如 dev 表示启用application-dev.yml） -->
+        <filter.active-profile>dev</filter.active-profile>
+        <!-- consul 服务器IP -->
+        <filter.consul.ip>127.0.0.1</filter.consul.ip>
+
+        <!-- 定义各个服务所在服务器ip -->
+        <filter.big-data-kafka.ip>127.0.0.1</filter.big-data-kafka.ip>
+
+        <!-- kafka 集群地址 -->
+        <filter.kafka.bootstrap-servers>192.168.1.128:9200,192.168.1.129:9200,192.168.1.130:9200</filter.kafka.bootstrap-servers>
+
+      </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <!--配置Maven 对resource文件 过滤 -->
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.xml</include>
+          <include>**/*.MF</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>codeTemplates/**/*.*</exclude>
+          <exclude>db/**/*.*</exclude>
+          <exclude>dbsys/**/*.*</exclude>
+          <exclude>rebel.xml</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+          <configuration>
+            <nonFilteredFileExtensions>
+              <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+              <nonFilteredFileExtension>swf</nonFilteredFileExtension>
+              <nonFilteredFileExtension>xls</nonFilteredFileExtension>
+              <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+              <nonFilteredFileExtension>doc</nonFilteredFileExtension>
+              <nonFilteredFileExtension>docx</nonFilteredFileExtension>
+            </nonFilteredFileExtensions>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.7.0</version>
+          <configuration>
+            <!--<source>${java.version}</source>
+            <target>${java.version}</target>-->
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.target}</target>
+            <encoding>${project.build.sourceEncoding}</encoding>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+          <configuration>
+            <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+            <fork>true</fork>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <!--打包成war包时忽略web.xml不存在导致打包失败的错误 -->
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.0</version>
+          <configuration>
+            <failOnMissingWebXml>false</failOnMissingWebXml>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.20.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <!--这里是指定update和插件的仓库，这样打包的时候也会从该仓库下载jar包-->
+  <repositories>
+    <repository>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots><!--false:SNAPSHOT版本的jar包不去这里寻找和下载-->
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+</project>
