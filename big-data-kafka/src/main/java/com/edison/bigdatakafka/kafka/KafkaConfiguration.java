@@ -77,6 +77,7 @@ public class KafkaConfiguration {
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemory);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG,30*1000);
         return props;
     }
 

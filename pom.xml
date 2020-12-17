@@ -68,6 +68,11 @@
             <type>pom</type>
             <scope>import</scope>
           </dependency>
+        <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>fastjson</artifactId>
+          <version>1.2.44</version>
+        </dependency>
       </dependencies>
   </dependencyManagement>
 

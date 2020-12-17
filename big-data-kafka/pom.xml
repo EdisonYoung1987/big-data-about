@@ -38,6 +38,12 @@
             <artifactId>kafka-clients</artifactId>
         </dependency>
 
+        <!--fastjson格式化-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

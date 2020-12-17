@@ -23,4 +23,8 @@ spring:
       concurrency: 1
 app:
   topicName:
-    passCarTopic: tfc_pass_ka_yw_0825 #passCar #tr_pass
+    passCarTopic: k_topic_test
+  executor:
+    core-size: 15
+    max-size: 60
+    queue-size: 250
