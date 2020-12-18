@@ -69,11 +69,12 @@ public class KafkaConfiguration {
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.ACKS_CONFIG, "0");
+        props.put(ProducerConfig.ACKS_CONFIG, "-1");//等同all，需leader和isr中所有的followers都保存成功，0-不管是否成功，1-只leader成功即可
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.RETRIES_CONFIG, retries);
-        props.put(ProducerConfig.BATCH_SIZE_CONFIG, batchSize);
-        props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
+        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG,"true");//开启冪等检查，防止消息重复发送
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, batchSize); //每个批次的最大数据量 默认16k=16384字节
+        props.put(ProducerConfig.LINGER_MS_CONFIG, 5); //每个批次处理的最大间隔毫秒
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemory);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);

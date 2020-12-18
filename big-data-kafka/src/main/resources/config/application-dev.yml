@@ -4,7 +4,7 @@ spring:
     producer:
       # 重试次数
       retries: 3
-      # 批量发送的消息数量
+      # 批量发送的消息数量 16K
       batch-size: 16384
       # 32MB的批处理缓冲区
       buffer-memory: 33554432

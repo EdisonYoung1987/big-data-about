@@ -35,10 +35,10 @@ public class KafkaProducerEvent implements ApplicationListener<ApplicationReadyE
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         logger.info("KafkaProducerEvent启动...");
-        List<String> msgs=new ArrayList<>(LISTCAPACITY);
         PassCar passCar=new PassCar();
         while(true){
             try{
+                List<String> msgs=new ArrayList<>(LISTCAPACITY);
                 for(int i=0;i<LISTCAPACITY;i++){
                     passCar.setPassTime(System.currentTimeMillis());
                     passCar.setPlateNum(RandomPasscarGenerator.genPlateNum());
@@ -49,6 +49,7 @@ public class KafkaProducerEvent implements ApplicationListener<ApplicationReadyE
                 KafkaSenderTask kafkaSenderTask=new KafkaSenderTask(kafkaSender,passCarTopic,msgs);
                 executor.execute(kafkaSenderTask);
                 Thread.currentThread().sleep(1000);
+                break;
             }catch(Exception e){
                 e.printStackTrace();
             }

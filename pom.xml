@@ -142,7 +142,7 @@
         <filter.big-data-kafka.ip>127.0.0.1</filter.big-data-kafka.ip>
 
         <!-- kafka 集群地址 -->
-        <filter.kafka.bootstrap-servers>192.168.1.128:9200,192.168.1.129:9200,192.168.1.130:9200</filter.kafka.bootstrap-servers>
+        <filter.kafka.bootstrap-servers>192.168.1.128:9092,192.168.1.129:9092,192.168.1.130:9092</filter.kafka.bootstrap-servers>
 
       </properties>
     </profile>
