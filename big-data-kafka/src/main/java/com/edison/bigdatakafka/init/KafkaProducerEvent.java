@@ -1,15 +1,13 @@
-package com.edison.bigdatakafka.initevents;
+package com.edison.bigdatakafka.init;
 
 import com.alibaba.fastjson.JSON;
 import com.edison.bigdatakafka.entity.PassCar;
-import com.edison.bigdatakafka.executor.Executor;
 import com.edison.bigdatakafka.kafka.KafkaSender;
 import com.edison.bigdatakafka.tasks.KafkaSenderTask;
 import com.edison.bigdatakafka.utils.RandomPasscarGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -50,7 +48,7 @@ public class KafkaProducerEvent implements ApplicationListener<ApplicationReadyE
                 executor.execute(kafkaSenderTask);
                 Thread.currentThread().sleep(1000);
                 break;
-            }catch(Exception e){
+            }catch(Exception e){//这个异常一般是发送前的异常，如序列化错误、缓冲区满、连接broker失败等等。
                 e.printStackTrace();
             }
         }

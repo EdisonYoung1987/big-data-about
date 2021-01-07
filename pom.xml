@@ -18,6 +18,7 @@
     <module>big-data-common</module>
     <module>big-data-web</module>
     <module>big-data-kafka</module>
+    <module>big-data-redis</module>
   </modules>
 
 
@@ -140,9 +141,11 @@
         <!-- 定义各个服务所在服务器ip，如果是分布式多节点部署，则保留为127.0.0.1，后面启动脚本会进行替换
              每个机器需要hostnamectl set-hostname 指定hostname并在/etc/hosts中配置ip-->
         <filter.big-data-kafka.ip>127.0.0.1</filter.big-data-kafka.ip>
+        <filter.big-data-redis.ip>127.0.0.1</filter.big-data-redis.ip>
 
         <!-- kafka 集群地址 -->
         <filter.kafka.bootstrap-servers>192.168.1.128:9092,192.168.1.129:9092,192.168.1.130:9092</filter.kafka.bootstrap-servers>
+        <filter.redis.cluster.nodes>50.28.131.16:9001,50.28.131.17:9001,50.28.131.25:9001</filter.redis.cluster.nodes>
 
       </properties>
     </profile>
