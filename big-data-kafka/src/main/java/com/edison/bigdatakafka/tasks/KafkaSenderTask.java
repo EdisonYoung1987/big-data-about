@@ -1,6 +1,6 @@
 package com.edison.bigdatakafka.tasks;
 
-import com.edison.bigdatakafka.kafka.KafkaSender;
+import com.edison.bigdatakafka.kafka.KafkaSenderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.support.SendResult;
@@ -13,11 +13,11 @@ import java.util.List;
 /**发送kafka数据的任务*/
 public class KafkaSenderTask implements Runnable {
     private static Logger logger= LoggerFactory.getLogger(KafkaSenderTask.class);
-    private KafkaSender kafkaSender;
+    private KafkaSenderUtil kafkaSender;
     private String topic;
     private List<String> msgs;
 
-    public KafkaSenderTask(KafkaSender kafkaSender,String topic,List<String> msgs){
+    public KafkaSenderTask(KafkaSenderUtil kafkaSender, String topic, List<String> msgs){
         this.kafkaSender=kafkaSender;
         this.topic=topic;
         this.msgs=msgs;

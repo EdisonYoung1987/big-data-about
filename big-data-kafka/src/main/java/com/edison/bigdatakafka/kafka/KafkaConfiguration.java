@@ -1,6 +1,8 @@
 package com.edison.bigdatakafka.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -15,6 +17,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,13 +110,20 @@ public class KafkaConfiguration {
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
-        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 120000);
-        props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 180000);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        //kafka0.9之前消费者的offset存于zk，之后版本存在一个单独的topic，__consumer_offsets，如果这个数据丢失，则消费者需要重置offset：
+        // 如果存在已经提交的offest时(手动或自动提交的),不管设置为earliest 或者latest 都会从已经提交的offest处开始消费
+        // 如果不存在已经提交的offest时,earliest 表示从头开始消费,latest 表示从最新的数据消费,也就是新产生的数据.
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);//针对offset的重置：默认latest
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);//broker实例地址
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);//每次拉取消息最大数量，默认500
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG,300000);//拉取消息最大间隔毫秒，默认300秒
+        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 120000);//session会话超时，默认10秒
+        props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 180000);//请求超时30000
+//        props.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG,) //心跳间隔
+        //ENABLE_AUTO_COMMIT_CONFIG
+        //AUTO_COMMIT_INTERVAL_MS_CONFIG 自动提交间隔
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); //key反序列化
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);//value反序列化
         return props;
     }
 
@@ -124,10 +134,13 @@ public class KafkaConfiguration {
     public KafkaListenerContainerFactory<?> batchFactory() {
         ConcurrentKafkaListenerContainerFactory<Integer, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(consumerConfigs()));
-        //设置并发消费
-        factory.setConcurrency(concurrency);
+        //设置并发线程数
+//        factory.setConcurrency(concurrency);//这个表示会创建多少个消费者
+        factory.setConcurrency(3);//对应会占用多少个分区？？
+
         //设置为批量消费，每个批次数量在Kafka配置参数中设置ConsumerConfig.MAX_POLL_RECORDS_CONFIG
         factory.setBatchListener(true);
         return factory;
+
     }
 }

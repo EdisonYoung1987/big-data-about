@@ -29,13 +29,13 @@ public class RedisInitEvent implements ApplicationListener<ApplicationReadyEvent
         for(String key:keys){
             logger.info(key);
             logger.info(redisTemplate.opsForValue().get(key));
-            redisTemplate.opsForSet().add("bk_hp_set",key);
+//            redisTemplate.opsForSet().add("bk_hp_set",key);
         }
 logger.info("-------------------------");
-        keys=redisTemplate.opsForSet().members("bk_hp_set");
+        /*keys=redisTemplate.opsForSet().members("bk_hp_set");
         for(String key:keys){
             logger.info(key);
             logger.info(redisTemplate.opsForValue().get(key));
-        }
+        }*/
     }
 }
