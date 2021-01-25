@@ -9,10 +9,10 @@ spring:
       # 32MB的批处理缓冲区
       buffer-memory: 33554432
     consumer:
-      # 默认消费者组
-      group-id: ehl-dap-alarm-test
-      # 最早未被消费的offset
-      auto-offset-reset: earliest
+      # 默认消费者组  会被@KafkaListener注解里面的groupId覆盖
+      group-id: big-data-kafka-group1
+      # 最早未被消费的offset-earliest/latest
+      auto-offset-reset: latest
       # 批量一次最大拉取数据量
       max-poll-records: 10
       # 自动提交
