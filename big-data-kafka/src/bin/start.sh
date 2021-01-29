@@ -32,6 +32,6 @@ class_path="$CLASSPATH"
 service_name="big-data-kafka"
 
 #应用程序启动入口main函数名称,不同服务的main函数名称不能相同!!!（需修改）
-entry_point="com.edison.bigdatakafka.BigDatakafkaApplication"
+entry_point="com.edison.bigdatakafka.BigDataKafkaApplication"
 
 $base_dir/bin/daemon.sh start "$java_option" "$class_path" "$service_name" "$entry_point"

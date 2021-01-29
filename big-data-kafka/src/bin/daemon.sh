@@ -29,12 +29,12 @@ start() {
         if [ ! -d "/proc/$pid" ]; then
             echo "$SERVICE_NAME not started. See log for detail."
             rm -f $PID_PATH_NAME
-            rm -f /var/lock/subsys/$SERVICE_NAME
+#            rm -f /var/lock/subsys/$SERVICE_NAME
             exit 1
         else
             echo $pid > $PID_PATH_NAME
             echo "$SERVICE_NAME started ... PID: $!"
-            touch /var/lock/subsys/$SERVICE_NAME
+#            touch /var/lock/subsys/$SERVICE_NAME
         fi
     else
         echo "$SERVICE_NAME is already running ..."
@@ -71,7 +71,7 @@ stop() {
         done
         echo "$SERVICE_NAME stopped ..."
         rm -f $PID_PATH_NAME
-        rm -f /var/lock/subsys/$SERVICE_NAME
+#        rm -f /var/lock/subsys/$SERVICE_NAME
     else
         echo "$SERVICE_NAME is not running."
     fi

@@ -135,8 +135,8 @@ public class KafkaConfiguration {
         ConcurrentKafkaListenerContainerFactory<Integer, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(consumerConfigs()));
         //设置并发线程数
-//        factory.setConcurrency(concurrency);//这个表示会创建多少个消费者
-        factory.setConcurrency(3);//对应会占用多少个分区？？
+//        factory.setConcurrency(concurrency);
+        factory.setConcurrency(Runtime.getRuntime().availableProcessors());//这个表示会创建多少个消费者，如果服务是多节点，可以设置为1，如果是单节点，可以考虑设置N(CPU核数)+1
 
         //设置为批量消费，每个批次数量在Kafka配置参数中设置ConsumerConfig.MAX_POLL_RECORDS_CONFIG
         factory.setBatchListener(true);
