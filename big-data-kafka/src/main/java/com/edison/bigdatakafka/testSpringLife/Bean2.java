@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @Order(5)
 public class Bean2 implements BeanFactoryAware, ApplicationContextAware, InitializingBean, BeanPostProcessor, CommandLineRunner {
     Logger logger= LoggerFactory.getLogger(Bean2.class);

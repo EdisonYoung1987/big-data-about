@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @Order(2) //指定CommandLineRunner顺序
 public class Bean1 implements BeanFactoryAware, ApplicationContextAware, InitializingBean, BeanPostProcessor, CommandLineRunner {
     Logger logger= LoggerFactory.getLogger(Bean1.class);

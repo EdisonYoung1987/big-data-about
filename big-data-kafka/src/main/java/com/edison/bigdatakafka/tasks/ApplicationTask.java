@@ -27,7 +27,7 @@ public class ApplicationTask implements Runnable {
     public void run() {
         logger.info("当前线程[{}]处理[{}]条数据",Thread.currentThread().getName(),records.size());
         for(ConsumerRecord<String,String> record:records){
-            logger.info("主题:{},partition:{},offset:{},msg={}",record.topic(),record.partition(),record.offset(),record.value());
+//            logger.info("主题:{},partition:{},offset:{},msg={}",record.topic(),record.partition(),record.offset(),record.value());
         }
         try {
             Thread.sleep(20);
